@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>A Dadaist Poem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=EB+Garamond&&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'EB Garamond', sans-serif;
+            background-image: url("http://localhost:3000/ears.jpg");
+            width: 100%;
+            height: 100%;
+        }
+        #poem {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 80px;
+            background-color: lightgrey;
+        }
+    </style>
+</head>
+<body>
+<h1>A Dadaist Poem</h1>
+
+<!---
+Input that takes a URL passes it to a JS function and the function does something with the URL and returns something to the DOM
+-->
+
+<p id="intro">
+    TO MAKE A DADAIST POEM:
+    Take a newspaper.
+    Take some scissors.
+    Choose from this paper an article of the length you want to make your poem.
+    Cut out the article.
+    Next carefully cut out each of the words that makes up this article and put them all in a bag.
+    Shake gently.
+    Next take out each cutting one after the other.
+    Copy conscientiously in the order in which they left the bag.
+    The poem will resemble you.
+    And there you are—an infinitely original author of charming sensibility, even though unappreciated by the vulgar herd.
+    —Tristan Tzara, 1920
+</p>
+
+<div>
+    <label for="articleUrl">Enter your article URL:</label>
+    <input type="text" id="articleUrl" name="articleUrl" required
+           maxlength="2048" size="40"/>
+</div>
+
+
+<div>
+<label for="seed">Choose your personal random number seed:</label>
+<input type="text" id="seed" name="seed" required
+       maxlength="2048" size="40"/>
+</div>
+<input id="createpoem"
+        type="button"
+        value="Create my poem"/>
+
+<div id="poem"></div>
+</body>
+
+<script>
+
+  function handlePoemResponse () {
+    const poemContainer = document.getElementById('poem')
+    poemContainer.innerText = `"${this.responseText}"`
+  }
+
+  function respondToClick(){
+
+    const articleUrl = document.getElementById('articleUrl').value
+    const seed = document.getElementById('seed').value
+    const poemEndpoint = `http://localhost:3000/poem`
+    const request = new XMLHttpRequest();
+
+
+    request.addEventListener("load", handlePoemResponse);
+    request.open("POST", poemEndpoint);
+    request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    request.send(`articleUrl=${articleUrl}&seed=${seed}`);
+
+  }
+
+  // get the element from the document and add the listener
+  const buttonElement = document.getElementById('createpoem')
+  if(buttonElement){
+    buttonElement.addEventListener('click', respondToClick)
+  }
+
+</script>
+
+
+</html>
